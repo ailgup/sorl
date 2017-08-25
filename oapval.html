@@ -1,0 +1,255 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>OAPVAL Calculator</title>
+</head>
+
+<body onload= "javascript:onLoad()">
+<h1>OAPVAL Calculator<br>
+<font size="1">Written by Christopher Puglia based on 
+<span style="text-decoration: none"><a href="OAPVAL.TXT"><font color="#000000">code from Joe Perry</font></a></span><br>
+<font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+©</font>2015 Space Optics Research Labs<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="oapval.html" download>Download for Offline Use</a></font></h1>
+<font color="#ff0000"><p id ="loctype"></p></font>
+
+<form id="frm1">Focal Length :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="f" size="5" value="">
+    <br>
+    <br>Diameter:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="d" size="5" value="">
+    <br>
+    <br>Off Axis Distance:&nbsp;
+    <input type="text" name="o" size="5" value="">
+    <br>
+    <br>Tangent Zone:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="t" size="5" value="">
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="c1" onclick="showMe('div1')">Display Table
+    <br>
+    <div id="div1" style="display:none">
+        <br>Starting Radius:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" name="a" size="5" value="">
+        <br>
+        <br>Scan Step Size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" name="z" size="5" value="">
+        <br>
+    </div>
+    <br>Precision:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="prec" size="5" value="5">
+    <br>
+    &nbsp;&nbsp;
+    <input type="checkbox" id="c2"> Scientific Notation
+    <br>
+</form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="myFunction()">Calculate</button>
+
+<H2><p id="name"></p></H2>
+        
+<p id="F"></p>
+<p id="R"></p>
+<p id="D"></p>
+<p id="O"></p>
+<p id="T"></p>
+<p id="B"></p>
+<p id="S2"></p>
+<p id="S3"></p>
+<p id="S4"></p>
+
+<script type='text/javascript'>//<![CDATA[ 
+function onLoad(){
+	var loctype = location.protocol;
+	if (loctype === "http:")
+	{
+	document.getElementById("loctype").innerHTML = "WARNING YOU ARE USING THIS ONLINE DOWNLOAD FOR PERMANANT USE";
+	}
+	else
+	{
+	document.getElementById("loctype").innerHTML = "";
+	}
+}
+
+function myFunction() {
+
+    var A, B, D, F, H, I, J, K, L, M, N, O, P, R, S1, S2, S3, S4, S5, S6, S7, S8, T, V, Y, X1, X2, X3, Z, prec;
+    F = parseFloat(document.getElementsByName("f")[0].value, 10);
+    D = parseFloat(document.getElementsByName("d")[0].value, 10);
+    O = parseFloat(document.getElementsByName("o")[0].value, 10);
+    T = parseFloat(document.getElementsByName("t")[0].value, 10);
+    A = parseFloat(document.getElementsByName("a")[0].value, 10);
+    Z = parseFloat(document.getElementsByName("z")[0].value, 10);
+    prec = parseFloat(document.getElementsByName("prec")[0].value, 10);
+	var sci = document.getElementById("c2").checked;
+    //Stand Alone Calcs
+    H = (D * T) + O;
+    R = F * 2;
+    S1 = (H * H) / (2 * R);
+    B = R + S1;
+    K = D + O;
+    I = (B - Math.sqrt((B * B) - (O * O))) - ((O * O) / (2 * R));
+    M = (B - Math.sqrt((B * B) - (H * H))) - ((H * H) / (2 * R));
+    J = (B - Math.sqrt((B * B) - (K * K))) - ((K * K) / (2 * R));
+    S2 = M - I;
+    S3 = M - M;
+    S4 = M - J;
+
+    //Printing Stuff
+
+    document.getElementById("name").innerHTML = "Off Axis Parabolic Mirror (Stand Alone)";
+if(sci)
+{
+	document.getElementById("F").innerHTML = "FOCAL LENGTH = " + F.toExponential(prec);
+    document.getElementById("R").innerHTML = "VERTEX RADIUS  = " + R.toExponential(prec);
+    document.getElementById("D").innerHTML = "DIAMETER  = " + D.toExponential(prec);
+    document.getElementById("O").innerHTML = "OFF AXIS DISTANCE  = " + O.toExponential(prec);
+    document.getElementById("T").innerHTML = "TANGENT ZONE  = " + T.toExponential(prec);
+    document.getElementById("B").innerHTML = "BEST FIT SPHERE  = " + B.toExponential(prec);
+    document.getElementById("S2").innerHTML = "INNER EDGE DELTA SAG  = " + S2.toExponential(prec);
+    document.getElementById("S3").innerHTML = "TANGENT ZONE DELTA SAG  = " + S3.toExponential(prec);
+    document.getElementById("S4").innerHTML = "OUTER EDGE DELTA SAG  = " + S4.toExponential(prec);
+
+}
+else
+{
+    document.getElementById("F").innerHTML = "FOCAL LENGTH = " + F.toPrecision(prec);
+    document.getElementById("R").innerHTML = "VERTEX RADIUS  = " + R.toPrecision(prec);
+    document.getElementById("D").innerHTML = "DIAMETER  = " + D.toPrecision(prec);
+    document.getElementById("O").innerHTML = "OFF AXIS DISTANCE  = " + O.toPrecision(prec);
+    document.getElementById("T").innerHTML = "TANGENT ZONE  = " + T.toPrecision(prec);
+    document.getElementById("B").innerHTML = "BEST FIT SPHERE  = " + B.toPrecision(prec);
+    document.getElementById("S2").innerHTML = "INNER EDGE DELTA SAG  = " + S2.toPrecision(prec);
+    document.getElementById("S3").innerHTML = "TANGENT ZONE DELTA SAG  = " + S3.toPrecision(prec);
+    document.getElementById("S4").innerHTML = "OUTER EDGE DELTA SAG  = " + S4.toPrecision(prec);
+}
+
+    if (document.getElementsByName("c1")[0].checked) {
+        //Delta Sag
+        document.getElementsByTagName("table").remove();
+        var body = document.body;
+        
+        var tbl = document.createElement("table");
+
+tbl.style.whiteSpace = 'nowrap';
+        tbl.border = '1';
+        var tr = tbl.insertRow();
+        tr.style.fontWeight = "900";
+        var td1 = tr.insertCell();
+        var td2 = tr.insertCell();
+        var td3 = tr.insertCell();
+        var td4 = tr.insertCell();
+        var td5 = tr.insertCell();
+        td1.appendChild(document.createTextNode('Radius'));
+        td2.appendChild(document.createTextNode('X Position'));
+        td3.appendChild(document.createTextNode('Y Position'));
+        td4.appendChild(document.createTextNode('Sag'));
+        td5.appendChild(document.createTextNode('P'));
+        Y = 0;
+        for (X1 = A - Z; X1 <= K; X1 += Z) {
+
+            var tr2 = tbl.insertRow();
+            S5 = (B - Math.sqrt((B * B) - (X1 * X1))) - ((X1 * X1) / (2 * R));
+            S6 = M - S5;
+            var tdz = tr2.insertCell();
+            tr2.appendChild(document.createTextNode('Zonal Delta Sag = '));
+            tr2.appendChild(document.createTextNode(-S6.toPrecision(prec)));
+
+
+            X2 = Math.sqrt((X1 * X1) - (Y * Y));
+            N = (D / 2) + O;
+
+            X3 = N - X2;
+            P = Math.sqrt((X3 * X3) + (Y * Y));
+            S7 = B - Math.sqrt((B * B) - (P * P));
+            S8 = S7 + S6;
+            //Print
+            var tr3 = tbl.insertRow();
+            var td6 = tr3.insertCell();
+            td6.appendChild(document.createTextNode(X1.toPrecision(prec)));
+            var td7 = tr3.insertCell();
+            td7.appendChild(document.createTextNode(X3.toPrecision(prec)));
+            var td8 = tr3.insertCell();
+            td8.appendChild(document.createTextNode(Y.toPrecision(prec)));
+            var td9 = tr3.insertCell();
+            td9.appendChild(document.createTextNode(S8.toPrecision(prec)));
+            var td0 = tr3.insertCell();
+            td0.appendChild(document.createTextNode(P.toPrecision(prec)));
+            Y = Y + Z;
+            L = D / 2;
+            X2 = Math.sqrt((X1 * X1) - (Y * Y));
+            
+            X3 = N - X2;
+            V = Math.sqrt((X3 * X3) + (Y * Y));
+
+           
+            while (V < L) {
+                
+                X3 = X2 - N;
+                P = Math.sqrt((X3 * X3) + (Y * Y));
+                S7 = (B - Math.sqrt((B * B) - (P * P)));
+                S8 = S7 + S6;
+                //Print
+                var tr4 = tbl.insertRow();
+                var td61 = tr4.insertCell();
+                td61.appendChild(document.createTextNode(X1.toPrecision(prec)));
+                var td71 = tr4.insertCell();
+                td71.appendChild(document.createTextNode(-X3.toPrecision(prec)));
+                var td81 = tr4.insertCell();
+                td81.appendChild(document.createTextNode(Y.toPrecision(prec)));
+                var td91 = tr4.insertCell();
+                td91.appendChild(document.createTextNode(S8.toPrecision(prec)));
+                var td01 = tr4.insertCell();
+                td01.appendChild(document.createTextNode(P.toPrecision(prec)));
+                Y = Y + Z;
+                L = D / 2;
+                X2 = Math.sqrt((X1 * X1) - (Y * Y));
+                X3 = N - X2;
+                V = Math.sqrt((X3 * X3) + (Y * Y));
+
+            } //End While
+            Y = 0;
+
+        }
+        body.appendChild(tbl);
+    }
+}
+/* TODO
+    place first values in table?
+    */
+
+
+//Show Hide Function for the Checkbox
+
+function showMe(box) {
+
+    // var chboxs = ;
+    var vis = "none";
+    if (document.getElementsByName("c1")[0].checked) {
+        vis = "block";
+    }
+    document.getElementById(box).style.display = vis;
+
+
+}
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = 0, len = this.length; i < len; i++) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+//]]>  
+
+</script>
+
+</body>
+
+</html>

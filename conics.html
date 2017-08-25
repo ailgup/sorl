@@ -1,0 +1,260 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Conic Calculator Written by Chris Puglia</title>
+</head>
+
+<body onload= "javascript:onLoad()">
+<h1>&nbsp;Conic Calculator<br>
+<font size="1">Written by Christopher Puglia based on <a href="CONICS.TXT">
+<span style="text-decoration: none"><font color="#000000">code from Joe Perry</font></span></a><br>
+<font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+©</font>2015 Space Optics Research Labs<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="conics.html" download>Download for Offline Use</a></font></h1>
+<font color="#ff0000"><p id ="loctype"></p></font>
+<form id="frm1">Vertex Radius :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="r" size="5" value="">
+    <br>
+    <br>Work Diameter:&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="d" size="5" value="">
+    <br>
+    <br>Conic Constant:&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="c" size="5" value="">
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="checkbox" name="c1" onclick="showMe('div1')">Delta Sag Table
+    <br>
+    <div id="div1" style="display:none">
+        <br>Number of Sag Points:
+        <input type="text" name="inc" size="5" value="20">-or- Sag Increment
+        <input type="text" name="saginc" size="5" value="">
+        <br><small>Note: If Increment is provided the Number of Sag Points will be ignored</small>
+
+    </div>
+    <br>Precision:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="prec" size="5" value="5">
+    <br>
+    &nbsp;&nbsp;
+    <input type="checkbox" id="c2"> Scientific Notation
+    <br>
+</form>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="myFunction()">Calculate</button>
+
+<H2><p id="name"></p></H2>
+        
+<p id="F1"></p>
+<p id="F2"></p>
+<p id="B"></p>
+<p id="S1"></p>
+<p id="S4"></p>
+        <p id="tab"></p>
+        
+<script type='text/javascript'>//<![CDATA[ 
+
+function onLoad(){
+	var loctype = location.protocol;
+	if (loctype === "http:")
+	{
+	document.getElementById("loctype").innerHTML = "WARNING YOU ARE USING THIS ONLINE DOWNLOAD FOR PERMANANT USE";
+	}
+	else
+	{
+	document.getElementById("loctype").innerHTML = "";
+	}
+}
+
+function myFunction() {
+    //body.removeChild(document.getElementById("tbl"));
+    var F1, F2, H1, H2, S1, S2, S3, S4, B;
+    var radius = parseFloat(document.getElementsByName("r")[0].value, 10);
+    var diam = parseFloat(document.getElementsByName("d")[0].value, 10);
+    var k = parseFloat(document.getElementsByName("c")[0].value, 10);
+    var prec = parseFloat(document.getElementsByName("prec")[0].value, 10);
+    var inc = parseFloat(document.getElementsByName("inc")[0].value, 10);
+    var saginc = parseFloat(document.getElementsByName("saginc")[0].value, 10);
+    H1 = diam / 2;
+    S1 = ((H1 * H1) / radius) / (1 + Math.sqrt((1 - ((k + 1) * ((H1 * H1) / (radius * radius))))));
+    B = ((S1 * S1) + (H1 * H1)) / (2 * S1);
+	var sci = document.getElementById("c2").checked;
+	
+	
+	if (k < -1) //HYPERBOLOID
+    {
+        F1 = (radius / (k + 1)) * (Math.sqrt(-k) - 1);
+        F2 = (radius / (k + 1)) * (Math.sqrt(-k) + 1);
+
+        document.getElementById("name").innerHTML = "Hyperboloid";
+        if(sci)
+        {
+        document.getElementById("F1").innerHTML = "F1                           = " + F1.toExponential(prec);
+        document.getElementById("F2").innerHTML = "F2                           = " + F2.toExponential(prec);
+        }
+        else
+        {
+        document.getElementById("F1").innerHTML = "F1                           = " + F1.toPrecision(prec);
+        document.getElementById("F2").innerHTML = "F2                           = " + F2.toPrecision(prec);
+        }
+    } else if (k == -1) //PARABALOID
+    {
+        F1 = radius / 2;
+        document.getElementById("name").innerHTML = "PARABOLOID";
+        if(sci)
+        {
+        document.getElementById("F1").innerHTML = "Focal Length                 = " + F1.toExponential(prec);
+        }
+        else
+        {
+        document.getElementById("F1").innerHTML = "Focal Length                 = " + F1.toPrecision(prec);
+        }
+    } else if (k == 0) //SPHERE
+    {
+        F1 = (radius / (k + 1)) * (1 - Math.sqrt(-k));
+        F2 = (radius / (k + 1)) * (1 + Math.sqrt(-k));
+
+        document.getElementById("name").innerHTML = "Sphere";
+        if(sci)
+        {
+        document.getElementById("F1").innerHTML = "F1                           = " + F1.toExponential(prec);
+        document.getElementById("F2").innerHTML = "F2                           = " + F2.toExponential(prec);
+        }
+        else
+        {
+        document.getElementById("F1").innerHTML = "F1                           = " + F1.toPrecision(prec);
+        document.getElementById("F2").innerHTML = "F2                           = " + F2.toPrecision(prec);
+        }
+    } else if (k > 0) // OBLATE SPHEREOID
+    {
+        F1 = (radius / (k + 1)) * (2 * Math.sqrt(k));
+        F2 = (radius / (k + 1));
+        document.getElementById("name").innerHTML = "OBLATE SPHEREOID";
+        if(sci)
+        {
+        document.getElementById("F1").innerHTML = "FOCII SEPERATION             = " + F1.toExponential(prec);
+        document.getElementById("F2").innerHTML = "HALF MINOR AXIS              = " + F2.toExponential(prec);
+        }
+        else
+        {
+        document.getElementById("F1").innerHTML = "FOCII SEPERATION             = " + F1.toPrecision(prec);
+        document.getElementById("F2").innerHTML = "HALF MINOR AXIS              = " + F2.toPrecision(prec);
+        }
+    } else if (k > -1 && k < 0) //PROLATE SPHEREOID
+    {
+        F1 = (radius / (k + 1)) * (1 - Math.sqrt(-k));
+        F2 = (radius / (k + 1)) * (1 + Math.sqrt(-k));
+
+        document.getElementById("name").innerHTML = "PROLATE SPHEREOID";
+        if(sci)
+        {
+        document.getElementById("F1").innerHTML = "F1 =                         = " + F1.toExponential(prec);
+        document.getElementById("F2").innerHTML = "F2 =                         = " + F2.toExponential(prec);
+        }
+        else
+        {
+        document.getElementById("F1").innerHTML = "F1 =                         = " + F1.toPrecision(prec);
+        document.getElementById("F2").innerHTML = "F2 =                         = " + F2.toPrecision(prec);
+        }
+    }
+       // Calculating the Delta Sag
+    H2 = H1 * (Math.sqrt(2) / 2);
+    S2 = (B - Math.sqrt((B * B) - (H1 * H1))) - ((H1 * H1) / radius) / (1 + Math.sqrt(1 - ((k + 1) * ((H1 * H1) / (radius * radius)))));
+    S3 = (B - Math.sqrt((B * B) - (H2 * H2))) - ((H2 * H2) / radius) / (1 + Math.sqrt(1 - ((k + 1) * ((H2 * H2) / (radius * radius)))));
+    S4 = S3 - S2;
+    
+    if(sci)
+    {
+    document.getElementById("B").innerHTML = "BEST FIT SPHERICAL RADIUS   = " + B.toExponential(prec);
+    document.getElementById("S1").innerHTML = "MAX. SAG                    = " + S1.toExponential(prec); 
+    document.getElementById("S4").innerHTML = "DELTA SAG  CENTER & EDGE    = " + S4.toExponential(prec);
+    }
+    else
+    {
+    document.getElementById("B").innerHTML = "BEST FIT SPHERICAL RADIUS   = " + B.toPrecision(prec);
+    document.getElementById("S1").innerHTML = "MAX. SAG                    = " + S1.toPrecision(prec); 
+    document.getElementById("S4").innerHTML = "DELTA SAG  CENTER & EDGE    = " + S4.toPrecision(prec);
+    }
+    
+    document.getElementsByTagName("table").remove();
+    if (document.getElementsByName("c1")[0].checked) {
+        //Delta Sag
+        
+        var body = document.body;
+        //document.getElementById("table").deleteRow(dr);
+        var tbl = document.createElement("table");
+        tbl.style.whiteSpace = 'nowrap';
+        tbl.style.border = "1px solid black";
+        var tr = tbl.insertRow();
+        tr.style.border = "1px solid black";
+        tr.style.fontWeight = "900";
+        var td1 = tr.insertCell();
+        var td2 = tr.insertCell();
+        var td3 = tr.insertCell();
+        var td4 = tr.insertCell();
+        td1.appendChild(document.createTextNode('S'));
+        td2.appendChild(document.createTextNode('SPH SAG'));
+        td3.appendChild(document.createTextNode('ASP SAG'));
+        td4.appendChild(document.createTextNode('DELTA SAG'));
+        var i, runs = 0,
+            z = saginc;
+        if (isNaN(saginc)) {
+            z = (H1 / inc);
+        }
+        for (i = 0; i < H1 + 0.01; i += z) {
+            var tr2 = tbl.insertRow();
+            runs++;
+            if (i >= H1) break;
+            var Q1 = ((i * i) / radius) / (1 + Math.sqrt(1 - ((k + 1) * ((i * i) / (radius * radius)))));
+            var Q2 = B - Math.sqrt((B * B) - (i * i));
+            var Q3 = S3 - (Q2 - Q1);
+            var td10 = tr2.insertCell();
+            var td20 = tr2.insertCell();
+            var td30 = tr2.insertCell();
+            var td40 = tr2.insertCell();
+            td10.appendChild(document.createTextNode(i.toPrecision(prec)));
+            td20.appendChild(document.createTextNode(Q2.toPrecision(prec)));
+            td30.appendChild(document.createTextNode(Q1.toPrecision(prec)));
+            td40.appendChild(document.createTextNode(Q3.toPrecision(prec)));
+        }
+        body.appendChild(tbl);
+
+    }
+    /* TODO
+    place first values in table?
+    */
+}
+
+//Show Hide Function for the Checkbox
+
+function showMe(box) {
+
+    // var chboxs = ;
+    var vis = "none";
+    if (document.getElementsByName("c1")[0].checked) {
+        vis = "block";
+    }
+    document.getElementById(box).style.display = vis;
+
+
+}
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = 0, len = this.length; i < len; i++) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+//]]>  
+
+</script>
+
+</body>
+
+</html>
